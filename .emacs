@@ -1,10 +1,10 @@
 ;; My custom emacs configuration
 
-;; Always start in my Development-git folder
-(setq default-directory "~/Development")
-
 ;; Stop getting the pesky start screen
 (setq inhibit-startup-message t)
+
+;; Set default directory
+(setq default-directory "C:\\Users\\Bhavek\\Development-git")
 (add-to-list 'load-path "~/.emacs.d/elpa")
 (add-to-list 'load-path "~/.emacs.d/extra")
 
@@ -20,7 +20,7 @@
 (setq-default indent-tabs-mode nil)
 
 ;; line numbers
-(global-linum-mode 1)
+(global-linum-mode t)
 
 ;; remove toolbar
 (tool-bar-mode -1)
@@ -42,7 +42,18 @@
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-(defvar local-packages '(restclient ido web-mode magit auto-complete monokai-theme elpy))
+(defvar rst-packages '(auto-complete-rst ox-rst sphinx-frontend))
+(defvar color-scheme '(gotham-theme))
+;;(defvar vim-mode '(evil))
+(defvar html '(ac-html))
+(defvar modes '(csharp-mode markdown-mode))
+(defvar misc-packages '(google-this magit auto-complete shell-pop))
+(defvar django '(django-manage django-mode django-snippets jinja2-mode))
+(defvar python '(elpy jedi))
+(defvar autocomp '(auto-complete))
+
+
+(defvar local-packages (append html rst-packages color-scheme  misc-packages modes django python autocomp))
 
 
 ;; Detect if packages are not installed.
@@ -61,7 +72,7 @@
            (package-install p)))))
 
 ;; monokai
-(load-theme 'monokai t)
+(load-theme 'gotham t)
 
 ;; orgmode
 (require 'org-install)
@@ -74,13 +85,34 @@
 ;; if you really like the menu
 (setq ac-show-menu-immediately-on-auto-complete t)
 
-;; (require 'evil)
-;; (evil-mode 1)
+;;(require 'evil)
+;;(evil-mode 1)
 
-(elpy-enable)
-;;(remove-hook 'elpy-modules 'elpy-module-flymake)
+;; ox-rst
+(add-to-list 'auto-mode-alist '("\\.rst$" . rst-mode) )
 
-;; Ido mode
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
+;; markdown mode
+(add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode) )
+
+;; rst mode
+
+(setq auto-mode-alist
+      (append '(("\\.rst\\'" . rst-mode)) auto-mode-alist))
+
+(setq auto-mode-alist
+      (append '(("\\.html\\'" . html-mode)) auto-mode-alist))
+
+
+;; google this
+
+(global-set-key (kbd "C-x g") 'google-this-mode-submap)
+(google-this-mode 1)
+
+
+;; elpy mode
+(add-to-list 'auto-mode-alist '("\\.py$" . elpy-mode) )
+(add-to-list 'auto-mode-alist '("\\.py$" . elpy-enable) )
+(add-to-list 'auto-mode-alist '("\\.py$" . python-mode) )
+
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
