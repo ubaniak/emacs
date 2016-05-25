@@ -116,3 +116,9 @@
 
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
+
+;; revert
+(global-auto-revert-mode 1)
+(setq auto-revert-verbose nil)
+
+(global-set-key (kbd "<f5>") 'revert-buffer)
